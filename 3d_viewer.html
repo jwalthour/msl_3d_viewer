@@ -1,0 +1,290 @@
+<html>
+<head>
+<script>
+
+function update()
+{
+	var l_td   = document.getElementById("L_td");
+	var r_td   = document.getElementById("R_td");
+	var l_img  = document.getElementById("L_img");
+	var r_img  = document.getElementById("R_img");
+	var prefix = document.getElementById("prefix").value;
+	var suffix = document.getElementById("suffix").value;
+	var invert = document.getElementById("invert");
+	
+	// Form URLs
+	var l_url;
+	var r_url;
+	if(invert.checked)
+	{
+		l_url = prefix + "R" + suffix;
+		r_url = prefix + "L" + suffix;
+	}
+	else
+	{
+		l_url = prefix + "L" + suffix;
+		r_url = prefix + "R" + suffix;
+	}
+	
+	// Fetch and determine the img aspect ratio
+	// Assume both are of equal size
+	var l_preload_image = new Image();
+	var r_preload_image = new Image();
+	l_preload_image.src = l_url; 
+	r_preload_image.src = r_url; 
+	var img_ratio = l_preload_image.width / l_preload_image.height;
+	
+	var cell_height = l_td.scrollHeight;
+	var cell_width  = l_td.scrollWidth;
+	var cell_ratio  = cell_width / cell_height;
+	
+	var img_height;
+	var img_width;
+	if(cell_ratio > img_ratio)
+	{ // height-limited
+		img_height = Math.min(cell_height, l_preload_image.height);
+		img_width = img_ratio * img_height;
+	} 
+	else 
+	{ // width-limited
+		img_width = Math.min(cell_width, l_preload_image.width);
+		img_height = cell_width / img_ratio;
+	}
+	l_img.height = img_height;
+	l_img.width  = img_width;
+	r_img.height = img_height;
+	r_img.width  = img_width;
+	
+	l_img.src =  l_url; 
+	r_img.src =  r_url; 
+
+	// cache prior and next images
+	var sel_ind = document.getElementById("suffix").selectedIndex;
+	if(sel_ind > 0)
+	{
+		var prev_suffix = document.getElementById("suffix").options[sel_ind - 1].value;
+		l_preload_image.src = prefix + "L" + prev_suffix;
+		r_preload_image.src = prefix + "R" + prev_suffix;
+	}
+	if(sel_ind < document.getElementById("suffix").options.length - 1)
+	{
+		var next_suffix = document.getElementById("suffix").options[sel_ind + 1].value;
+		l_preload_image.src = prefix + "L" + next_suffix;
+		r_preload_image.src = prefix + "R" + next_suffix;
+	}
+}
+
+function load_suffixes_from_array(lines, suffixes)
+{
+	// Remove existing suffixes
+	for(i = suffixes.options.length - 1; i >= 0; --i)
+	{
+		suffixes.options[i] = null;
+	}
+	
+	len = lines.length;
+	for(i = 0; i < len; ++i)
+	{
+		var option = document.createElement("option");
+		option.text = lines[i];
+		option.value = lines[i];
+		suffixes.add(option);
+	}
+
+}
+
+function load_suffixes_from_html()
+{
+	var suffixes = document.getElementById("suffix");
+	var lines_area = document.getElementById("lines");
+	var lines = lines_area.value.split('\n');
+	load_suffixes_from_array(lines, suffixes);
+}
+
+function preload()
+{
+	var prefix = document.getElementById("prefix").value;
+	var suffixes = document.getElementById("suffix");
+	
+	var len = suffixes.options.length;
+	var l_imgs = new Array(len);
+	var r_imgs = new Array(len);
+	for(i = 0; i < len; ++i)
+	{
+		var url = prefix + "L" + suffixes.options[i].value;
+		l_imgs[i] = new Image();
+		l_imgs[i].src = url;
+		url = prefix + "R" + suffixes.options[i].value;
+		r_imgs[i] = new Image();
+		r_imgs[i].src = url;
+	}
+}
+
+function load_presets__s340_navcam()
+{
+	var prefix = document.getElementById("prefix");
+	prefix.value = "img_cache/s340_drive/N";
+
+	var lines = [
+		"B_427678265EDR_D0081102TRAV00071M_.JPG",
+		"B_427678217EDR_D0081096TRAV00071M_.JPG",
+		"B_427677364EDR_D0081024TRAV00071M_.JPG",
+		"B_427676877EDR_D0081018TRAV00071M_.JPG",
+		"B_427676115EDR_D0080958TRAV00071M_.JPG",
+		"B_427676067EDR_D0080952TRAV00071M_.JPG",
+		"B_427675926EDR_D0080946TRAV00071M_.JPG",
+		"B_427675842EDR_D0080940TRAV00071M_.JPG",
+		"B_427675751EDR_D0080934TRAV00071M_.JPG",
+		"B_427675663EDR_D0080928TRAV00071M_.JPG",
+		"B_427675577EDR_D0080922TRAV00071M_.JPG",
+		"B_427675492EDR_D0080916TRAV00071M_.JPG",
+		"B_427675408EDR_D0080910TRAV00071M_.JPG",
+		"B_427675325EDR_D0080904TRAV00071M_.JPG",
+		"B_427675241EDR_D0080898TRAV00071M_.JPG",
+		"B_427675158EDR_D0080892TRAV00071M_.JPG",
+		"B_427675075EDR_D0080886TRAV00071M_.JPG",
+		"B_427674993EDR_D0080880TRAV00071M_.JPG",
+		"B_427674911EDR_D0080874TRAV00071M_.JPG",
+		"B_427674828EDR_D0080868TRAV00071M_.JPG",
+		"B_427674748EDR_D0080862TRAV00071M_.JPG",
+		"B_427674668EDR_D0080856TRAV00071M_.JPG",
+		"B_427674561EDR_D0080850TRAV00071M_.JPG",
+		"B_427674476EDR_D0080844TRAV00071M_.JPG",
+		"B_427674387EDR_D0080838TRAV00071M_.JPG",
+		"B_427674295EDR_D0080832TRAV00071M_.JPG",
+		"B_427673776EDR_D0080826TRAV00071M_.JPG",
+		"B_427673691EDR_D0080820TRAV00071M_.JPG",
+		"B_427673606EDR_D0080814TRAV00071M_.JPG",
+		"B_427673518EDR_D0080808TRAV00071M_.JPG",
+		"B_427673432EDR_D0080802TRAV00071M_.JPG",
+		"B_427673347EDR_D0080796TRAV00071M_.JPG",
+		"B_427673263EDR_D0080790TRAV00071M_.JPG",
+		"B_427673177EDR_D0080784TRAV00071M_.JPG",
+		"B_427673090EDR_D0080778TRAV00071M_.JPG",
+		"B_427673005EDR_D0080772TRAV00071M_.JPG",
+		"B_427672921EDR_D0080766TRAV00071M_.JPG",
+		"B_427672837EDR_D0080760TRAV00071M_.JPG",
+		"B_427672747EDR_D0080754TRAV00071M_.JPG",
+		"B_427672655EDR_D0080748TRAV00071M_.JPG",
+		"B_427672568EDR_D0080742TRAV00071M_.JPG",
+		"B_427672482EDR_D0080736TRAV00071M_.JPG",
+		"B_427672397EDR_D0080730TRAV00071M_.JPG",
+		"B_427672309EDR_D0080724TRAV00071M_.JPG",
+		"B_427672222EDR_D0080718TRAV00071M_.JPG",
+		"B_427672135EDR_D0080712TRAV00071M_.JPG",
+		"B_427672049EDR_D0080706TRAV00071M_.JPG",
+		"B_427671963EDR_D0080700TRAV00071M_.JPG",
+		"B_427671877EDR_D0080694TRAV00071M_.JPG",
+		"B_427671791EDR_D0080688TRAV00071M_.JPG",
+		"B_427671706EDR_D0080682TRAV00071M_.JPG",
+		"B_427671623EDR_D0080676TRAV00071M_.JPG",
+		"B_427671539EDR_D0080670TRAV00071M_.JPG",
+		"B_427671455EDR_D0080664TRAV00071M_.JPG",
+		"B_427671373EDR_D0080658TRAV00071M_.JPG",
+		"B_427671291EDR_D0080652TRAV00071M_.JPG",
+		"B_427671208EDR_D0080646TRAV00071M_.JPG",
+		"B_427671125EDR_D0080640TRAV00071M_.JPG",
+		"B_427671043EDR_D0080634TRAV00071M_.JPG",
+		"B_427670963EDR_D0080628TRAV00071M_.JPG",
+		"B_427670881EDR_D0080622TRAV00071M_.JPG",
+		"B_427670803EDR_D0080616TRAV00071M_.JPG",
+
+	];
+	var suffixes = document.getElementById("suffix");
+	load_suffixes_from_array(lines, suffixes);
+}
+
+function load_presets__s299_rearview()
+{
+	var prefix = document.getElementById("prefix");
+	prefix.value = "img_cache/s299_rearview/R";
+
+	var lines = [
+		"B_424024283EDR_F0060224RHAZ00323M_.JPG",
+		"B_424033457EDR_F0060248RHAZ00305M_.JPG",
+		"B_424034670EDR_F0060254RHAZ00305M_.JPG",
+		"B_424035884EDR_F0060260RHAZ00305M_.JPG",
+		"B_424038322EDR_F0060272RHAZ00305M_.JPG",
+		"B_424039536EDR_F0060278RHAZ00305M_.JPG",
+		"B_424041970EDR_F0060290RHAZ00305M_.JPG",
+		"B_424043195EDR_F0060296RHAZ00305M_.JPG",
+		"B_424044407EDR_F0060302RHAZ00305M_.JPG",
+		"B_424045622EDR_F0060308RHAZ00305M_.JPG",
+	];
+	var suffixes = document.getElementById("suffix");
+	load_suffixes_from_array(lines, suffixes);
+}
+
+function load_presets__s299_sideview()
+{
+	var prefix = document.getElementById("prefix");
+	prefix.value = "img_cache/s299_sideview/N";
+
+	var lines = [
+		"B_424033194EDR_D0060230TRAV00052M_.JPG",
+		"B_424033261EDR_D0060236TRAV00052M_.JPG",
+		"B_424033319EDR_D0060242TRAV00052M_.JPG",
+		"B_424033376EDR_D0060248TRAV00052M_.JPG",
+		"B_424035800EDR_D0060260TRAV00052M_.JPG",
+		"B_424037014EDR_D0060266TRAV00052M_.JPG",
+		"B_424038230EDR_D0060272TRAV00052M_.JPG",
+		"B_424039449EDR_D0060278TRAV00052M_.JPG",
+		"B_424041885EDR_D0060290TRAV00052M_.JPG",
+		"B_424043105EDR_D0060296TRAV00052M_.JPG",
+		"B_424044322EDR_D0060302TRAV00052M_.JPG",
+		"B_424045537EDR_D0060308TRAV00052M_.JPG",
+	];
+	var suffixes = document.getElementById("suffix");
+	load_suffixes_from_array(lines, suffixes);
+}
+
+
+
+</script>
+</head>
+<body margin="0" padding="0" onload="load_presets__s340_navcam();update();">
+	<table width="100%" height="100%" margin="0" padding="0" cellpadding="0"><tbody>
+		<tr height="*">
+			<td width="50%" id="L_td" align="right">
+				<img id="L_img" width="1" height="1" src="" />
+			</td>
+			<td width="50%" id="R_td" align="left">
+				<img id="R_img" width="1" height="1" src="" />
+			</td>
+		</tr>
+		<tr height="50">
+			<td colspan="2" align="center">
+				<table style="border:1px solid black;">
+					<tr>
+						<td>Prefix</td>
+						<td>Suffix list</td>
+						<td><input type="button" value="update" onclick="update();" /></td>
+					</tr>
+					<tr>
+						<td><input type="text" id="prefix" size="100" onblur="update();" value="Enter URL preceding R/L"/></td>
+						<td>
+							<select id="suffix" onchange="update();" onkeyup="update();">
+								<option selected value="B_427678873EDR_D0081148TRAV00071M_.JPG">Use textbox or presets below</option>
+							</select>
+						</td>
+						<td>
+							<input type="checkbox" label="invert" id="invert" checked onchange="update();">invert</input>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</tbody></table>
+	<center>
+	<textarea id="lines" width="70" height="5">Enter suffixes, separated by newlines
+	</textarea>
+	<br />
+	<input type="button" value="load into suffixes selector" onclick="load_suffixes_from_html();"/>
+	<hr />
+	<h1>Presets</h1>
+	<input type="button" value="Sol 340 navcam drive" onclick="load_presets__s340_navcam();"/>
+	<input type="button" value="Sol 299 sideview drive" onclick="load_presets__s299_sideview();"/>
+	<input type="button" value="Sol 299 rearview drive" onclick="load_presets__s299_rearview();"/>
+	</center>
+</body>
+</html>
