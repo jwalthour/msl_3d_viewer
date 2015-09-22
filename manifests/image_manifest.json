@@ -1,8 +1,8 @@
 {
   "type": "msl-images-manifest-1.0",
-  "latest_sol": 1111,
-  "num_images": 270702,
-  "most_recent": "2015-09-22T12:30:14Z",
+  "latest_sol": 1112,
+  "num_images": 270807,
+  "most_recent": "2015-09-22T19:31:11Z",
   "sols": [
     {
       "sol": 0,
@@ -5238,9 +5238,9 @@
     },
     {
       "sol": 1000,
-      "num_images": 659,
+      "num_images": 716,
       "catalog_url": "http://mars.jpl.nasa.gov/msl-raw-images/image/images_sol1000.json",
-      "last_updated": "2015-09-22T12:30:14Z"
+      "last_updated": "2015-09-22T19:31:11Z"
     },
     {
       "sol": 1001,
@@ -5754,9 +5754,15 @@
     },
     {
       "sol": 1111,
-      "num_images": 40,
+      "num_images": 56,
       "catalog_url": "http://mars.jpl.nasa.gov/msl-raw-images/image/images_sol1111.json",
-      "last_updated": "2015-09-21T20:08:21Z"
+      "last_updated": "2015-09-22T19:30:41Z"
+    },
+    {
+      "sol": 1112,
+      "num_images": 32,
+      "catalog_url": "http://mars.jpl.nasa.gov/msl-raw-images/image/images_sol1112.json",
+      "last_updated": "2015-09-22T19:06:19Z"
     }
   ]
 }

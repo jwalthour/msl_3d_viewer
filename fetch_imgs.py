@@ -1,9 +1,10 @@
 #!/usr/bin/python
 import json
 import os
+import os.path
 import common
 
-IMG_DIR = "images/"
+IMG_DIR = "images/" # must end in "/"
 
 def update_json(start_sol, end_sol):
   common.download_file(common.MANIFEST_PATH, "http://mars.jpl.nasa.gov/msl-raw-images/image/image_manifest.json")
@@ -22,18 +23,24 @@ def clear_downloaded_manifests():
 def get_full_images(start_sol, end_sol, instrument_startswith):
   clear_downloaded_manifests()
   update_json(start_sol, end_sol)
-  img_dirs = os.listdir(IMG_DIR)
+  sol_dirs = os.listdir(IMG_DIR)
   for image_list in common.load_image_lists():
     sol = image_list["sol"]
-    img_dir = "sol%d"%sol
-    if not img_dir in img_dirs:
-      os.makedirs(IMG_DIR + img_dir)
+    sol_dir = "sol%d"%sol
+    if not sol_dir in sol_dirs:
+      os.makedirs(IMG_DIR + sol_dir)
     for image in image_list["images"]:
       if image["instrument"].startswith(instrument_startswith) and image["sampleType"] == "full":
         url = image["urlList"]
-        you need to start storing these by instrument
-        and checking for file presence before downloading anew
-        common.download_file(IMG_DIR + img_dir + "/" + url.split("/")[-1], url)
+        instrument_dir = image["instrument"]
+        instrument_dirs = os.listdir(IMG_DIR + sol_dir)
+        if not instrument_dir in instrument_dirs:
+          os.makedirs(IMG_DIR + sol_dir + "/" + instrument_dir)
+        local_path = IMG_DIR + sol_dir + "/" + instrument_dir + "/" + url.split("/")[-1]
+        if os.path.isfile(local_path):
+          print "Present; won't download: " + local_path
+        else:
+          common.download_file(local_path, url)
 
 
 get_full_images(0, 10, "NAV_")
