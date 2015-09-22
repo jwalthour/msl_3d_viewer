@@ -31,6 +31,8 @@ def get_full_images(start_sol, end_sol, instrument_startswith):
     for image in image_list["images"]:
       if image["instrument"].startswith(instrument_startswith) and image["sampleType"] == "full":
         url = image["urlList"]
+        you need to start storing these by instrument
+        and checking for file presence before downloading anew
         common.download_file(IMG_DIR + img_dir + "/" + url.split("/")[-1], url)
 
 
