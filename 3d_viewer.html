@@ -1,5 +1,17 @@
 <html>
 <head>
+<style>
+.big_legend {
+  color:#555555;
+  font-family: Consolas, Courier New;
+  font-size: 30px;
+}
+.big_data {
+  color:#000000;
+  font-family: Consolas, Courier New;
+  font-size: 30px;
+}
+</style>
 <script src="js/instruments.js"> </script>
 <script src="js/image_index.js"> </script>
 <script src="js/avail.js"> </script>
@@ -18,7 +30,7 @@ function update()
 	var r_td   = document.getElementById("R_td");
 	var l_img  = document.getElementById(L_IMAGE_ID);
 	var r_img  = document.getElementById(R_IMAGE_ID);
-	document.getElementById("sol").value = cur_sol;
+	document.getElementById("sol").innerHTML = cur_sol;
 	var instrument = document.getElementById("instrument").value;
 	document.getElementById("image_num").value = cur_img;
 	var invert = document.getElementById("invert");
@@ -110,6 +122,9 @@ function gotoPrevSol() {
 
 function switchInstrument() {
   goToLatestSol();
+  var inst_dropdown = document.getElementById("instrument");
+  var avail_imgs = image_index[cur_sol][inst_dropdown.value];
+  document.getElementById("total_images").innerHTML = avail_imgs.length;
   update();
 }
 
@@ -154,25 +169,19 @@ function handleKeyPress(e) {
 			</td>
 		</tr>
 		<tr height="50">
-			<td colspan="2" align="center">
-				<table style="border:1px solid black;">
+			<td colspan="1" align="center">
+				<table>
 					<tr>
-            <td>Sol</td>
-						<td>Instrument</td>
-						<td>Image</td>
-						<td></td>
+            <td><span class="big_legend">Sol </span><span class="big_data" id="sol">0000</span></td>
+						<td><span class="big_legend">Image </span><span class="big_data" id="image_num">0</span> <span class="big_legend">&nbsp;of </span> <span class="big_legend" id="total_images">1</span></td>
 					</tr>
 					<tr>
-						<td><input type="text" id="sol" value="1100"/></td>
 						<td>
 							<select id="instrument" onchange="switchInstrument()">
 							</select>
 						</td>
 						<td>
-              <input type="text" id="image_num" value="0" size="4"/>
-						</td>
-						<td>
-							<input type="checkbox" label="invert" id="invert" checked onchange="update();">invert</input>
+							<input type="checkbox" label="invert" id="invert" checked="0" onchange="update();">invert</input>
 						</td>
 					</tr>
 				</table>
