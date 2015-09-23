@@ -1,7 +1,7 @@
 <html>
 <head>
-<script src ="js/instruments.js" />
-<script src ="js/image_index.js" />
+<script src ="js/instruments.js"> </script>
+<script src ="js/image_index.js"> </script>
 <script>
 
 function update()
@@ -10,22 +10,21 @@ function update()
 	var r_td   = document.getElementById("R_td");
 	var l_img  = document.getElementById("L_img");
 	var r_img  = document.getElementById("R_img");
-	var prefix = document.getElementById("prefix").value;
-	var suffix = document.getElementById("suffix").value;
+	var sol    = document.getElementById("sol").value;
+	var instrument = document.getElementById("instrument").value;
+	var image_num = document.getElementById("image_num").value;
 	var invert = document.getElementById("invert");
 	
+  // We assume sol and number have been validated at this point
+  
 	// Form URLs
-	var l_url;
-	var r_url;
+	var l_url = image_index[sol][instrument][image_num]["l_file_path"];
+	var r_url = image_index[sol][instrument][image_num]["r_file_path"];
 	if(invert.checked)
 	{
-		l_url = prefix + "R" + suffix;
-		r_url = prefix + "L" + suffix;
-	}
-	else
-	{
-		l_url = prefix + "L" + suffix;
-		r_url = prefix + "R" + suffix;
+    temp = r_url
+    r_url = l_url
+    l_url = temp
 	}
 	
 	// Fetch and determine the img aspect ratio
@@ -64,19 +63,19 @@ function update()
 	r_img.src =  r_url; 
 
 	// cache prior and next images
-	var sel_ind = document.getElementById("suffix").selectedIndex;
-	if(sel_ind > 0)
-	{
-		var prev_suffix = document.getElementById("suffix").options[sel_ind - 1].value;
-		l_preload_image.src = prefix + "L" + prev_suffix;
-		r_preload_image.src = prefix + "R" + prev_suffix;
-	}
-	if(sel_ind < document.getElementById("suffix").options.length - 1)
-	{
-		var next_suffix = document.getElementById("suffix").options[sel_ind + 1].value;
-		l_preload_image.src = prefix + "L" + next_suffix;
-		r_preload_image.src = prefix + "R" + next_suffix;
-	}
+	//var sel_ind = document.getElementById("suffix").selectedIndex;
+	//if(sel_ind > 0)
+	//{
+	//	var prev_suffix = document.getElementById("suffix").options[sel_ind - 1].value;
+	//	l_preload_image.src = prefix + "L" + prev_suffix;
+	//	r_preload_image.src = prefix + "R" + prev_suffix;
+	//}
+	//if(sel_ind < document.getElementById("suffix").options.length - 1)
+	//{
+	//	var next_suffix = document.getElementById("suffix").options[sel_ind + 1].value;
+	//	l_preload_image.src = prefix + "L" + next_suffix;
+	//	r_preload_image.src = prefix + "R" + next_suffix;
+	//}
 }
 
 function load_suffixes_from_array(lines, suffixes)
@@ -125,247 +124,31 @@ function preload()
 	}
 }
 
-function load_presets__s340_navcam()
-{
-	var prefix = document.getElementById("prefix");
-	prefix.value = "img_cache/s340_drive/N";
+function initPage() {
 
-	var lines = [
-		"B_427678265EDR_D0081102TRAV00071M_.JPG",
-		"B_427678217EDR_D0081096TRAV00071M_.JPG",
-		"B_427677364EDR_D0081024TRAV00071M_.JPG",
-		"B_427676877EDR_D0081018TRAV00071M_.JPG",
-		"B_427676115EDR_D0080958TRAV00071M_.JPG",
-		"B_427676067EDR_D0080952TRAV00071M_.JPG",
-		"B_427675926EDR_D0080946TRAV00071M_.JPG",
-		"B_427675842EDR_D0080940TRAV00071M_.JPG",
-		"B_427675751EDR_D0080934TRAV00071M_.JPG",
-		"B_427675663EDR_D0080928TRAV00071M_.JPG",
-		"B_427675577EDR_D0080922TRAV00071M_.JPG",
-		"B_427675492EDR_D0080916TRAV00071M_.JPG",
-		"B_427675408EDR_D0080910TRAV00071M_.JPG",
-		"B_427675325EDR_D0080904TRAV00071M_.JPG",
-		"B_427675241EDR_D0080898TRAV00071M_.JPG",
-		"B_427675158EDR_D0080892TRAV00071M_.JPG",
-		"B_427675075EDR_D0080886TRAV00071M_.JPG",
-		"B_427674993EDR_D0080880TRAV00071M_.JPG",
-		"B_427674911EDR_D0080874TRAV00071M_.JPG",
-		"B_427674828EDR_D0080868TRAV00071M_.JPG",
-		"B_427674748EDR_D0080862TRAV00071M_.JPG",
-		"B_427674668EDR_D0080856TRAV00071M_.JPG",
-		"B_427674561EDR_D0080850TRAV00071M_.JPG",
-		"B_427674476EDR_D0080844TRAV00071M_.JPG",
-		"B_427674387EDR_D0080838TRAV00071M_.JPG",
-		"B_427674295EDR_D0080832TRAV00071M_.JPG",
-		"B_427673776EDR_D0080826TRAV00071M_.JPG",
-		"B_427673691EDR_D0080820TRAV00071M_.JPG",
-		"B_427673606EDR_D0080814TRAV00071M_.JPG",
-		"B_427673518EDR_D0080808TRAV00071M_.JPG",
-		"B_427673432EDR_D0080802TRAV00071M_.JPG",
-		"B_427673347EDR_D0080796TRAV00071M_.JPG",
-		"B_427673263EDR_D0080790TRAV00071M_.JPG",
-		"B_427673177EDR_D0080784TRAV00071M_.JPG",
-		"B_427673090EDR_D0080778TRAV00071M_.JPG",
-		"B_427673005EDR_D0080772TRAV00071M_.JPG",
-		"B_427672921EDR_D0080766TRAV00071M_.JPG",
-		"B_427672837EDR_D0080760TRAV00071M_.JPG",
-		"B_427672747EDR_D0080754TRAV00071M_.JPG",
-		"B_427672655EDR_D0080748TRAV00071M_.JPG",
-		"B_427672568EDR_D0080742TRAV00071M_.JPG",
-		"B_427672482EDR_D0080736TRAV00071M_.JPG",
-		"B_427672397EDR_D0080730TRAV00071M_.JPG",
-		"B_427672309EDR_D0080724TRAV00071M_.JPG",
-		"B_427672222EDR_D0080718TRAV00071M_.JPG",
-		"B_427672135EDR_D0080712TRAV00071M_.JPG",
-		"B_427672049EDR_D0080706TRAV00071M_.JPG",
-		"B_427671963EDR_D0080700TRAV00071M_.JPG",
-		"B_427671877EDR_D0080694TRAV00071M_.JPG",
-		"B_427671791EDR_D0080688TRAV00071M_.JPG",
-		"B_427671706EDR_D0080682TRAV00071M_.JPG",
-		"B_427671623EDR_D0080676TRAV00071M_.JPG",
-		"B_427671539EDR_D0080670TRAV00071M_.JPG",
-		"B_427671455EDR_D0080664TRAV00071M_.JPG",
-		"B_427671373EDR_D0080658TRAV00071M_.JPG",
-		"B_427671291EDR_D0080652TRAV00071M_.JPG",
-		"B_427671208EDR_D0080646TRAV00071M_.JPG",
-		"B_427671125EDR_D0080640TRAV00071M_.JPG",
-		"B_427671043EDR_D0080634TRAV00071M_.JPG",
-		"B_427670963EDR_D0080628TRAV00071M_.JPG",
-		"B_427670881EDR_D0080622TRAV00071M_.JPG",
-		"B_427670803EDR_D0080616TRAV00071M_.JPG",
+  // Populate the "instrument" selector
+  var inst_names = []
+  var inst_dropdown = document.getElementById("instrument");
+  for (var name in instruments) {
+    var option = document.createElement("option");
+    option.text = instruments[name]["human_readable"];
+    option.value = name;
+    inst_dropdown.add(option);
+  }
 
-	];
-	var suffixes = document.getElementById("suffix");
-	load_suffixes_from_array(lines, suffixes);
+  // Set sol to the last one
+  var sol_sel = document.getElementById("sol");
+  // Hackish way to get the last known sol
+  var sol_last
+  for (var sol_last in image_index) {
+    ;
+  }
+  sol_sel.value = sol_last;
 }
-
-function load_presets__s299_rearview()
-{
-	var prefix = document.getElementById("prefix");
-	prefix.value = "img_cache/s299_rearview/R";
-
-	var lines = [
-		"B_424024283EDR_F0060224RHAZ00323M_.JPG",
-		"B_424033457EDR_F0060248RHAZ00305M_.JPG",
-		"B_424034670EDR_F0060254RHAZ00305M_.JPG",
-		"B_424035884EDR_F0060260RHAZ00305M_.JPG",
-		"B_424038322EDR_F0060272RHAZ00305M_.JPG",
-		"B_424039536EDR_F0060278RHAZ00305M_.JPG",
-		"B_424041970EDR_F0060290RHAZ00305M_.JPG",
-		"B_424043195EDR_F0060296RHAZ00305M_.JPG",
-		"B_424044407EDR_F0060302RHAZ00305M_.JPG",
-		"B_424045622EDR_F0060308RHAZ00305M_.JPG",
-	];
-	var suffixes = document.getElementById("suffix");
-	load_suffixes_from_array(lines, suffixes);
-}
-
-function load_presets__s299_sideview()
-{
-	var prefix = document.getElementById("prefix");
-	prefix.value = "img_cache/s299_sideview/N";
-
-	var lines = [
-		"B_424033194EDR_D0060230TRAV00052M_.JPG",
-		"B_424033261EDR_D0060236TRAV00052M_.JPG",
-		"B_424033319EDR_D0060242TRAV00052M_.JPG",
-		"B_424033376EDR_D0060248TRAV00052M_.JPG",
-		"B_424035800EDR_D0060260TRAV00052M_.JPG",
-		"B_424037014EDR_D0060266TRAV00052M_.JPG",
-		"B_424038230EDR_D0060272TRAV00052M_.JPG",
-		"B_424039449EDR_D0060278TRAV00052M_.JPG",
-		"B_424041885EDR_D0060290TRAV00052M_.JPG",
-		"B_424043105EDR_D0060296TRAV00052M_.JPG",
-		"B_424044322EDR_D0060302TRAV00052M_.JPG",
-		"B_424045537EDR_D0060308TRAV00052M_.JPG",
-	];
-	var suffixes = document.getElementById("suffix");
-	load_suffixes_from_array(lines, suffixes);
-}
-
-
-function load_presets__s1067()
-{
-	var prefix = document.getElementById("prefix");
-
-  prefix.value = "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/01067/opgs/edr/ncam/N";
-
-  var lines = [
-    "B_492222578EDR_F0490000NCAM00354M_.JPG",
-    "B_492222526EDR_F0490000NCAM00354M_.JPG",
-    "B_492222502EDR_F0490000NCAM00354M_.JPG",
-    "B_492222478EDR_F0490000NCAM00354M_.JPG",
-    "B_492222446EDR_F0490000NCAM00354M_.JPG",
-    "B_492222424EDR_F0490000NCAM00305M_.JPG",
-    "B_492222223EDR_F0490000NCAM00292M_.JPG",
-    "B_492222193EDR_F0490000NCAM00292M_.JPG",
-    "B_492222168EDR_F0490000NCAM00292M_.JPG",
-    "B_492222136EDR_F0490000NCAM00292M_.JPG",
-    "B_492222104EDR_F0490000NCAM00292M_.JPG",
-    "B_492218894EDR_F0482896NCAM00385M_.JPG",
-    "B_492218862EDR_F0482896NCAM00385M_.JPG",
-    "B_492219517EDR_D0482950TRAV00357M_.JPG",
-    "B_492219452EDR_D0482944TRAV00357M_.JPG",
-    "B_492219392EDR_D0482938TRAV00357M_.JPG",
-    "B_492219349EDR_D0482932TRAV00357M_.JPG",
-    "B_492219291EDR_D0482932TRAV00357M_.JPG",
-    "B_492219241EDR_D0482926TRAV00357M_.JPG",
-    "B_492219164EDR_D0482920TRAV00357M_.JPG",
-    "B_492219097EDR_D0482914TRAV00357M_.JPG",
-    "B_492219029EDR_D0482908TRAV00357M_.JPG",
-    "B_492218961EDR_D0482902TRAV00357M_.JPG",
-    "B_492218793EDR_D0482896TRAV00357M_.JPG",
-    "B_492218719EDR_D0482890TRAV00357M_.JPG",
-    "B_492218657EDR_D0482884TRAV00357M_.JPG",
-    "B_492218592EDR_D0482878TRAV00357M_.JPG",
-    "B_492218521EDR_D0482872TRAV00357M_.JPG",
-    "B_492218449EDR_D0482866TRAV00357M_.JPG",
-    "B_492218375EDR_D0482860TRAV00357M_.JPG",
-    "B_492218300EDR_D0482854TRAV00357M_.JPG",
-    "B_492218226EDR_D0482848TRAV00357M_.JPG",
-    "B_492218151EDR_D0482842TRAV00357M_.JPG",
-    "B_492218077EDR_D0482836TRAV00357M_.JPG",
-    "B_492218001EDR_D0482830TRAV00357M_.JPG",
-    "B_492217922EDR_D0482824TRAV00357M_.JPG",
-    "B_492217855EDR_D0482818TRAV00357M_.JPG",
-    "B_492217777EDR_D0482812TRAV00357M_.JPG",
-    "B_492217564EDR_D0482794TRAV00357M_.JPG",
-  ];
-
-	var suffixes = document.getElementById("suffix");
-	load_suffixes_from_array(lines, suffixes);
-}
-
-function load_presets__s1053()
-{
-	var prefix = document.getElementById("prefix");
-
-  prefix.value = "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/01053/opgs/edr/ncam/N";
-  var lines = [
-    "B_490980444EDR_F0482518NCAM07753M_.JPG",
-    "B_490980420EDR_F0482518NCAM07753M_.JPG",
-    "B_490980396EDR_F0482518NCAM07753M_.JPG",
-    "B_490980372EDR_F0482518NCAM07753M_.JPG",
-    "B_490980341EDR_F0482518NCAM07753M_.JPG",
-    "B_490980310EDR_F0482518NCAM07753M_.JPG",
-    "B_490980279EDR_F0482518NCAM07753M_.JPG",
-    "B_490980199EDR_F0482518NCAM00350M_.JPG",
-    "B_490980159EDR_F0482518NCAM00350M_.JPG",
-    "B_490980127EDR_F0482518NCAM00350M_.JPG",
-    "B_490980102EDR_F0482518NCAM00350M_.JPG",
-    "B_490980070EDR_F0482518NCAM00350M_.JPG",
-    "B_490975453EDR_F0482518NCAM00287M_.JPG",
-    "B_490975370EDR_F0482518NCAM00287M_.JPG",
-    "B_490975339EDR_F0482518NCAM00287M_.JPG",
-    "B_490975308EDR_F0482518NCAM00287M_.JPG",
-    "B_490975284EDR_F0482518NCAM00287M_.JPG",
-    "B_490974656EDR_F0482518NCAM00353M_.JPG",
-    "B_490974625EDR_F0482518NCAM00353M_.JPG",
-  ];
-
-	var suffixes = document.getElementById("suffix");
-	load_suffixes_from_array(lines, suffixes);
-}
-
-function load_presets__s837()
-{
-	var prefix = document.getElementById("prefix");
-
-  prefix.value = "http://mars.jpl.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/00837/opgs/edr/ncam/N"
-  var lines = ["B_471807119EDR_F0442414NCAM00263M_.JPG",
-    "B_471807088EDR_F0442414NCAM00263M_.JPG",
-    "B_471807057EDR_F0442414NCAM00263M_.JPG",
-    "B_471807024EDR_F0442414NCAM00262M_.JPG",
-    "B_471806998EDR_F0442414NCAM00262M_.JPG",
-    "B_471806967EDR_F0442414NCAM00262M_.JPG",
-    "B_471806936EDR_F0442414NCAM00262M_.JPG",
-    "B_471806905EDR_F0442414NCAM00262M_.JPG",
-    "B_471806881EDR_F0442414NCAM00262M_.JPG",
-    "B_471806850EDR_F0442414NCAM00262M_.JPG",
-    "B_471806826EDR_F0442414NCAM00262M_.JPG",
-    "B_471806742EDR_F0442414NCAM00262M_.JPG",
-    "B_471806711EDR_F0442414NCAM00262M_.JPG",
-    "B_471806680EDR_F0442414NCAM00262M_.JPG",
-    "B_471806647EDR_F0442414NCAM00262M_.JPG",
-    "B_471806606EDR_F0442414NCAM00354M_.JPG",
-    "B_471806575EDR_F0442414NCAM00354M_.JPG",
-    "B_471806550EDR_F0442414NCAM00354M_.JPG",
-    "B_471806526EDR_F0442414NCAM00354M_.JPG",
-    "B_471806502EDR_F0442414NCAM00354M_.JPG",
-    "B_471800424EDR_F0442414NCAM00353M_.JPG",
-    "B_471800393EDR_F0442414NCAM00353M_.JPG",
-    "B_471799382EDR_F0442396NCAM00393M_.JPG",
-    "B_471799347EDR_F0442396NCAM00393M_.JPG",
-  ];
-
-	var suffixes = document.getElementById("suffix");
-	load_suffixes_from_array(lines, suffixes);
-}
-
 
 </script>
 </head>
-<body margin="0" padding="0" onload="load_presets__s340_navcam();update();">
+<body margin="0" padding="0" onload="initPage();">
 	<table width="100%" height="100%" margin="0" padding="0" cellpadding="0"><tbody>
 		<tr height="*">
 			<td width="50%" id="L_td" align="center">
@@ -385,11 +168,13 @@ function load_presets__s837()
 						<td><input type="button" value="update" onclick="update();" /></td>
 					</tr>
 					<tr>
-						<td><input type="text" id="prefix" size="100" onblur="update();" value="Enter URL preceding R/L"/></td>
+						<td><input type="text" id="sol" value="1100"/></td>
 						<td>
-							<select id="suffix" onchange="update();" onkeyup="update();">
-								<option selected value="B_427678873EDR_D0081148TRAV00071M_.JPG">Use textbox or presets below</option>
+							<select id="instrument" onchange="">
 							</select>
+						</td>
+						<td>
+              <input type="text" id="image_num" value="0" size="4"/>
 						</td>
 						<td>
 							<input type="checkbox" label="invert" id="invert" checked onchange="update();">invert</input>
