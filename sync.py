@@ -13,6 +13,7 @@ IMG_DIR = "images/" # must end in "/"
 INSTRUMENTS={
   "navcams": {
     "human_readable":"Navigation Cameras",
+    "dir":"navcam",
     "inst_prefix":{
       "r":"NAV_RIGHT_",
       "l":"NAV_LEFT_",
@@ -20,6 +21,7 @@ INSTRUMENTS={
   },
   "front_hazcams": {
     "human_readable":"Front Hazard Avoidance Cameras",
+    "dir":"f_hazcam",
     "inst_prefix":{
       "r":"FHAZ_RIGHT_",
       "l":"FHAZ_LEFT_",
@@ -27,6 +29,7 @@ INSTRUMENTS={
   },
   "rear_hazcams": {
     "human_readable":"Front Hazard Avoidance Cameras",
+    "dir":"r_hazcam",
     "inst_prefix":{
       "r":"FHAZ_RIGHT_",
       "l":"FHAZ_LEFT_",
@@ -34,6 +37,7 @@ INSTRUMENTS={
   },
   "mastcams":{
     "human_readable":"Mast Cameras",
+    "dir":"mastcam",
     "inst_prefix":{
       "r":"MAST_RIGHT", # No A and B sides for this one
       "l":"MAST_LEFT",
@@ -66,24 +70,34 @@ def get_full_images(start_sol, end_sol, instruments):
   if not os.path.isdir(IMG_DIR):
     os.makedirs(IMG_DIR)
   sol_dirs = os.listdir(IMG_DIR)
-  prefixes = [INSTRUMENTS[inst]["inst_prefix"][side] for side in ['r','l'] for inst in instruments]
+  r_insts = [{"prefix":INSTRUMENTS[inst]["inst_prefix"]['r'], "dir":INSTRUMENTS[inst]["dir"]} for inst in instruments]
+  l_insts = [{"prefix":INSTRUMENTS[inst]["inst_prefix"]['l'], "dir":INSTRUMENTS[inst]["dir"]} for inst in instruments]
   for image_list in common.load_image_lists():
     sol = image_list["sol"]
     sol_dir = "sol%d"%sol
     if not sol_dir in sol_dirs:
       os.makedirs(IMG_DIR + sol_dir)
+    instrument_dirs = os.listdir(IMG_DIR + sol_dir)
     for image in image_list["images"]:
-      correct_instrument = False
-      for prefix in prefixes:
-        if image["instrument"].startswith(prefix):
-          correct_instrument = True
+      correct_instrument = None
+      for inst in r_insts:
+        if image["instrument"].startswith(inst["prefix"]):
+          correct_instrument = inst
+          side = "r"
           break
-      if correct_instrument and image["sampleType"] == "full":
+      if not correct_instrument:
+        for inst in l_insts:
+          if image["instrument"].startswith(inst["prefix"]):
+            correct_instrument = inst
+            side = "l"
+            break
+      instrument_dir = inst["dir"] + '/' + side
+      if not inst["dir"] in instrument_dirs:
+        os.makedirs(IMG_DIR + sol_dir + "/" + inst["dir"] + "/r")
+        os.makedirs(IMG_DIR + sol_dir + "/" + inst["dir"] + "/l")
+        instrument_dirs.append(inst["dir"])  
+      if correct_instrument != None and image["sampleType"] == "full":
         url = image["urlList"]
-        instrument_dir = image["instrument"]
-        instrument_dirs = os.listdir(IMG_DIR + sol_dir)
-        if not instrument_dir in instrument_dirs:
-          os.makedirs(IMG_DIR + sol_dir + "/" + instrument_dir)
         local_path = IMG_DIR + sol_dir + "/" + instrument_dir + "/" + url.split("/")[-1]
         if os.path.isfile(local_path):
           print "Present; won't download: " + local_path
@@ -93,7 +107,15 @@ def get_full_images(start_sol, end_sol, instruments):
 # Makes an index for use by the javascript
 # This ignores the manifests, and only looks at the filesystem.
 def make_index_of_downloaded_photos():
-  return []
+  image_index = []
+  sol_dirs = os.listdir(IMG_DIR)
+  for sol_dir in sol_dirs:
+    inst_dirs = os.listdir(IMG_DIR + sol_dir)
+    for inst_dir in inst_dirs:
+      img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir)
+      
+  
+  return image_index
 
 def main():
   parser = argparse.ArgumentParser(description="Downloads photos from NASA's Mars Science Laboratory public API for use in stereo viewing.")
@@ -104,7 +126,7 @@ def main():
   if not os.path.isdir(JS_DIR):
     os.makedirs(JS_DIR)
   print "Downloading data from sol %d to sol %d."%(args.start, args.end)
-#  get_full_images(args.start, args.end, ["navcams", "front_hazcams"])
+  get_full_images(args.start, args.end, ["navcams", "front_hazcams"])
   js_index = make_index_of_downloaded_photos()
   index_str = "var image_index=" + json.dumps(js_index)
   instrument_str = "var instruments=" + json.dumps(INSTRUMENTS)
