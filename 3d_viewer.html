@@ -15,10 +15,8 @@ function update()
 {
 	var l_td   = document.getElementById("L_td");
 	var r_td   = document.getElementById("R_td");
-	var l_img_old  = document.getElementById(L_IMAGE_ID);
-	var r_img_old  = document.getElementById(R_IMAGE_ID);
-	var l_img  = document.createElement("img");
-	var r_img  = document.createElement("img");
+	var l_img  = document.getElementById(L_IMAGE_ID);
+	var r_img  = document.getElementById(R_IMAGE_ID);
 	var sol    = document.getElementById("sol").value;
 	var instrument = document.getElementById("instrument").value;
 	var image_num = document.getElementById("image_num").value;
@@ -36,108 +34,28 @@ function update()
     l_url = temp
 	}
 	
-	// Fetch and determine the img aspect ratio
-	// Assume both are of equal size
-	var l_preload_image = new Image();
-	var r_preload_image = new Image();
-	l_preload_image.src = l_url; 
-	r_preload_image.src = r_url; 
-	var img_ratio = l_preload_image.width / l_preload_image.height;
-	
 	var cell_height = l_td.scrollHeight;
 	var cell_width  = l_td.scrollWidth;
 	var cell_ratio  = cell_width / cell_height;
 	
-	var img_height = l_preload_image.height;
-	var img_width = l_preload_image.width;
-	if(img_width > cell_width || 
-    img_height > cell_height) {
-    if(cell_ratio > img_ratio)
-    { // height-limited
-      img_height = Math.min(cell_height, l_preload_image.height);
-      img_width = img_ratio * img_height;
-    } 
-    else 
-    { // width-limited
-      img_width = Math.min(cell_width, l_preload_image.width);
-      img_height = cell_width / img_ratio;
-    }
+	// Images are all square for now
+  var img_size;
+	if(l_td.scrollWidth > l_td.scrollHeight)
+  { // height-limited
+    img_size = cell_height;
+  } 
+  else 
+  { // width-limited
+    img_size = cell_width;
   }
-	l_img.height = img_height;
-	l_img.width  = img_width;
-	r_img.height = img_height;
-	r_img.width  = img_width;
+
+	l_img.height = img_size;
+	l_img.width  = img_size;
+	r_img.height = img_size;
+	r_img.width  = img_size;
 	l_img.src =  l_url;
 	r_img.src =  r_url;
-	l_img.id =  L_IMAGE_ID;
-	r_img.id =  R_IMAGE_ID;
-  
-  // Delete old, add new
-  l_img_old.parentNode.insertBefore(l_img, l_img_old);
-  l_img_old.parentNode.removeChild(l_img_old);
-  r_img_old.parentNode.insertBefore(r_img, r_img_old);
-  r_img_old.parentNode.removeChild(r_img_old);
 
-	// cache prior and next images
-	//var sel_ind = document.getElementById("suffix").selectedIndex;
-	//if(sel_ind > 0)
-	//{
-	//	var prev_suffix = document.getElementById("suffix").options[sel_ind - 1].value;
-	//	l_preload_image.src = prefix + "L" + prev_suffix;
-	//	r_preload_image.src = prefix + "R" + prev_suffix;
-	//}
-	//if(sel_ind < document.getElementById("suffix").options.length - 1)
-	//{
-	//	var next_suffix = document.getElementById("suffix").options[sel_ind + 1].value;
-	//	l_preload_image.src = prefix + "L" + next_suffix;
-	//	r_preload_image.src = prefix + "R" + next_suffix;
-	//}
-}
-
-function load_suffixes_from_array(lines, suffixes)
-{
-	// Remove existing suffixes
-	for(i = suffixes.options.length - 1; i >= 0; --i)
-	{
-		suffixes.options[i] = null;
-	}
-	
-	len = lines.length;
-	for(i = 0; i < len; ++i)
-	{
-		var option = document.createElement("option");
-		option.text = lines[i];
-		option.value = lines[i];
-		suffixes.add(option);
-	}
-
-}
-
-function load_suffixes_from_html()
-{
-	var suffixes = document.getElementById("suffix");
-	var lines_area = document.getElementById("lines");
-	var lines = lines_area.value.split('\n');
-	load_suffixes_from_array(lines, suffixes);
-}
-
-function preload()
-{
-	var prefix = document.getElementById("prefix").value;
-	var suffixes = document.getElementById("suffix");
-	
-	var len = suffixes.options.length;
-	var l_imgs = new Array(len);
-	var r_imgs = new Array(len);
-	for(i = 0; i < len; ++i)
-	{
-		var url = prefix + "L" + suffixes.options[i].value;
-		l_imgs[i] = new Image();
-		l_imgs[i].src = url;
-		url = prefix + "R" + suffixes.options[i].value;
-		r_imgs[i] = new Image();
-		r_imgs[i].src = url;
-	}
 }
 
 function initPage() {
