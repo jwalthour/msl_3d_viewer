@@ -138,9 +138,10 @@ def make_availability_list(image_index):
   avail = {};
   for sol in image_index:
     for inst in image_index[sol]:
-      if not inst in avail:
-        avail[inst] = []
-      avail[inst].append(sol)
+      if(len(image_index[sol][inst]) > 0):
+        if not inst in avail:
+          avail[inst] = []
+        avail[inst].append(sol)
   return avail
 
 def main():

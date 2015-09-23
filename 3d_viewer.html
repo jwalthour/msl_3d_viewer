@@ -26,6 +26,7 @@ function update()
   // We assume sol and number have been validated at this point
   
 	// Form URLs
+  console.log("Updating screen to Sol " + cur_sol + " " + instrument + " image # " + image_num);
 	var l_url = image_index[cur_sol][instrument][image_num]["l_file_path"];
 	var r_url = image_index[cur_sol][instrument][image_num]["r_file_path"];
 	if(invert.checked)
@@ -89,14 +90,21 @@ function gotoPrevImage() {
 }
 
 function gotoNextSol() {
-  var avail_sols = avail[inst_dropdown.value]
+  var inst_dropdown = document.getElementById("instrument");
+  var avail_sols = avail[inst_dropdown.value];
   var i = avail_sols.indexOf(cur_sol);
   if(++i >= avail_sols.length) { i = avail_sols.length - 1; }
+  else { cur_img = 0;}
   cur_sol = avail_sols[i]
   update();
 }
 
 function gotoPrevSol() {
+  var inst_dropdown = document.getElementById("instrument");
+  var avail_sols = avail[inst_dropdown.value]
+  var i = avail_sols.indexOf(cur_sol);
+  if(--i < 0) { i = 0; }
+  cur_sol = avail_sols[i]
 
   update();
 }
@@ -139,6 +147,9 @@ function gotoPrevSol() {
 			</td>
 		</tr>
 	</tbody></table>
-  
+  <input type="button" value="next sol" onClick="gotoNextSol()" />
+  <input type="button" value="prev sol" onClick="gotoPrevSol()" />
+  <input type="button" value="next img" onClick="gotoNextImage()" />
+  <input type="button" value="prev img" onClick="gotoPrevImage()" />
 </body>
 </html>
