@@ -83,15 +83,14 @@ def get_full_images(start_sol, end_sol, instruments):
       for inst in r_insts:
         if image["instrument"].startswith(inst["prefix"]):
           correct_instrument = inst
-          side = "r"
+          instrument_dir = inst["dir"] + '/' + "r"
           break
       if not correct_instrument:
         for inst in l_insts:
           if image["instrument"].startswith(inst["prefix"]):
             correct_instrument = inst
-            side = "l"
+            instrument_dir = inst["dir"] + '/' + "l"
             break
-      instrument_dir = inst["dir"] + '/' + side
       if not inst["dir"] in instrument_dirs:
         os.makedirs(IMG_DIR + sol_dir + "/" + inst["dir"] + "/r")
         os.makedirs(IMG_DIR + sol_dir + "/" + inst["dir"] + "/l")
@@ -116,19 +115,20 @@ def make_index_of_downloaded_photos():
     inst_dirs = os.listdir(IMG_DIR + sol_dir)
     for inst_dir in inst_dirs:
       images = []
-      inst = inst_for_dir[inst_dir]
-      
-      # Lucky for us, the directories are both sorted the same way.
-      # We assume they didn't delete just one.
-      r_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/r')
-      l_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/l')
-      for pair in zip(r_img_filenames, l_img_filenames):
-        image = {
-          "r_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/r/' + pair[0],
-          "l_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/l/' + pair[1]
-        }
-        images.append(image)
-      sol["images"].append({inst:images})
+      if inst_dir in inst_for_dir:
+        inst = inst_for_dir[inst_dir]
+        
+        # Lucky for us, the directories are both sorted the same way.
+        # We assume they didn't delete just one.
+        r_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/r')
+        l_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/l')
+        for pair in zip(r_img_filenames, l_img_filenames):
+          image = {
+            "r_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/r/' + pair[0],
+            "l_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/l/' + pair[1]
+          }
+          images.append(image)
+        sol["images"].append({inst:images})
     image_index.append(sol)
   return image_index
 
