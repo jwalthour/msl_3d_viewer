@@ -8,6 +8,7 @@ import common
 JS_DIR = "js/" # must end in "/"
 IMAGE_INDEX_PATH = JS_DIR + "image_index.js"
 INSTRUMENTS_PATH = JS_DIR + "instruments.js"
+AVAIL_PATH = JS_DIR + "avail.js"
 IMG_DIR = "images/" # must end in "/"
 # SIDES = ["A","B"] # instruments are redundant as "A side" and "B side"; both have been in use this mission
 INSTRUMENTS={
@@ -132,6 +133,16 @@ def make_index_of_downloaded_photos():
     image_index[sol_num] = sol
   return image_index
 
+# Returns a dictionary showing which sols are available for a particular instrument
+def make_availability_list(image_index):
+  avail = {};
+  for sol in image_index:
+    for inst in image_index[sol]:
+      if not inst in avail:
+        avail[inst] = []
+      avail[inst].append(sol)
+  return avail
+
 def main():
   parser = argparse.ArgumentParser(description="Downloads photos from NASA's Mars Science Laboratory public API for use in stereo viewing.")
   parser.add_argument("-s", "--start",    metavar="sol", dest="start",type=int,  default=1090, help="Download images from sols starting at this one")
@@ -142,13 +153,17 @@ def main():
     os.makedirs(JS_DIR)
   print "Downloading data from sol %d to sol %d."%(args.start, args.end)
   get_full_images(args.start, args.end, ["navcams", "front_hazcams"])
-  js_index = make_index_of_downloaded_photos()
-  index_str = "var image_index=" + json.dumps(js_index)
+  image_index = make_index_of_downloaded_photos()
+  avail = make_availability_list(image_index)
+  index_str = "var image_index=" + json.dumps(image_index)
   instrument_str = "var instruments=" + json.dumps(INSTRUMENTS)
+  avail_str = "var avail=" + json.dumps(avail)
   with open(IMAGE_INDEX_PATH, 'w') as outfile:
     outfile.write(index_str)
   with open(INSTRUMENTS_PATH, 'w') as outfile:
     outfile.write(instrument_str)
+  with open(AVAIL_PATH, 'w') as outfile:
+    outfile.write(avail_str)
 
 if __name__ == "__main__":
     main()
