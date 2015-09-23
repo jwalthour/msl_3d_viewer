@@ -1,7 +1,8 @@
 <html>
 <head>
-<script src ="js/instruments.js"> </script>
-<script src ="js/image_index.js"> </script>
+<script src="js/instruments.js"> </script>
+<script src="js/image_index.js"> </script>
+<script src="js/avail.js"> </script>
 <script>
 
 // Page state variables
@@ -17,7 +18,7 @@ function update()
 	var r_td   = document.getElementById("R_td");
 	var l_img  = document.getElementById(L_IMAGE_ID);
 	var r_img  = document.getElementById(R_IMAGE_ID);
-	var sol    = document.getElementById("sol").value;
+	document.getElementById("sol").value = cur_sol;
 	var instrument = document.getElementById("instrument").value;
 	var image_num = document.getElementById("image_num").value;
 	var invert = document.getElementById("invert");
@@ -25,8 +26,8 @@ function update()
   // We assume sol and number have been validated at this point
   
 	// Form URLs
-	var l_url = image_index[sol][instrument][image_num]["l_file_path"];
-	var r_url = image_index[sol][instrument][image_num]["r_file_path"];
+	var l_url = image_index[cur_sol][instrument][image_num]["l_file_path"];
+	var r_url = image_index[cur_sol][instrument][image_num]["r_file_path"];
 	if(invert.checked)
 	{
     temp = r_url
@@ -72,12 +73,32 @@ function initPage() {
 
   // Set sol to the last one
   var sol_sel = document.getElementById("sol");
-  // Hackish way to get the last known sol
-  var sol_last
-  for (var sol_last in image_index) {
-    ;
-  }
-  sol_sel.value = sol_last;
+  var avail_sols = avail[inst_dropdown.value]
+  cur_sol = sol_sel.value = avail_sols[avail_sols.length - 1];
+  cur_img = 0;
+}
+
+// Navigation functions - all within a particular instrument
+function gotoNextImage() {
+  update();
+}
+
+function gotoPrevImage() {
+
+  update();
+}
+
+function gotoNextSol() {
+  var avail_sols = avail[inst_dropdown.value]
+  var i = avail_sols.indexOf(cur_sol);
+  if(++i >= avail_sols.length) { i = avail_sols.length - 1; }
+  cur_sol = avail_sols[i]
+  update();
+}
+
+function gotoPrevSol() {
+
+  update();
 }
 
 </script>
@@ -118,5 +139,6 @@ function initPage() {
 			</td>
 		</tr>
 	</tbody></table>
+  
 </body>
 </html>
