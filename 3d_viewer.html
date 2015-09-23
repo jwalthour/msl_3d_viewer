@@ -20,15 +20,15 @@ function update()
 	var r_img  = document.getElementById(R_IMAGE_ID);
 	document.getElementById("sol").value = cur_sol;
 	var instrument = document.getElementById("instrument").value;
-	var image_num = document.getElementById("image_num").value;
+	document.getElementById("image_num").value = cur_img;
 	var invert = document.getElementById("invert");
 	
   // We assume sol and number have been validated at this point
   
 	// Form URLs
-  console.log("Updating screen to Sol " + cur_sol + " " + instrument + " image # " + image_num);
-	var l_url = image_index[cur_sol][instrument][image_num]["l_file_path"];
-	var r_url = image_index[cur_sol][instrument][image_num]["r_file_path"];
+  console.log("Updating screen to Sol " + cur_sol + " " + instrument + " image # " + cur_img);
+	var l_url = image_index[cur_sol][instrument][cur_img]["l_file_path"];
+	var r_url = image_index[cur_sol][instrument][cur_img]["r_file_path"];
 	if(invert.checked)
 	{
     temp = r_url
@@ -81,11 +81,14 @@ function initPage() {
 
 // Navigation functions - all within a particular instrument
 function gotoNextImage() {
+  var inst_dropdown = document.getElementById("instrument");
+  var avail_imgs = image_index[cur_sol][inst_dropdown.value];
+  if(++cur_img >= avail_imgs.length) { cur_img = avail_imgs.length - 1; }
   update();
 }
 
 function gotoPrevImage() {
-
+  if(--cur_img < 0) { cur_img = 0; }
   update();
 }
 
@@ -104,6 +107,7 @@ function gotoPrevSol() {
   var avail_sols = avail[inst_dropdown.value]
   var i = avail_sols.indexOf(cur_sol);
   if(--i < 0) { i = 0; }
+  else { cur_img = 0;}
   cur_sol = avail_sols[i]
 
   update();
