@@ -4,12 +4,21 @@
 <script src ="js/image_index.js"> </script>
 <script>
 
+// Page state variables
+var cur_sol = -1;
+var cur_img = -1;
+
+var L_IMAGE_ID = "L_img";
+var R_IMAGE_ID = "R_img";
+
 function update()
 {
 	var l_td   = document.getElementById("L_td");
 	var r_td   = document.getElementById("R_td");
-	var l_img  = document.getElementById("L_img");
-	var r_img  = document.getElementById("R_img");
+	var l_img_old  = document.getElementById(L_IMAGE_ID);
+	var r_img_old  = document.getElementById(R_IMAGE_ID);
+	var l_img  = document.createElement("img");
+	var r_img  = document.createElement("img");
 	var sol    = document.getElementById("sol").value;
 	var instrument = document.getElementById("instrument").value;
 	var image_num = document.getElementById("image_num").value;
@@ -58,9 +67,16 @@ function update()
 	l_img.width  = img_width;
 	r_img.height = img_height;
 	r_img.width  = img_width;
-	
-	l_img.src =  l_url; 
-	r_img.src =  r_url; 
+	l_img.src =  l_url;
+	r_img.src =  r_url;
+	l_img.id =  L_IMAGE_ID;
+	r_img.id =  R_IMAGE_ID;
+  
+  // Delete old, add new
+  l_img_old.parentNode.insertBefore(l_img, l_img_old);
+  l_img_old.parentNode.removeChild(l_img_old);
+  r_img_old.parentNode.insertBefore(r_img, r_img_old);
+  r_img_old.parentNode.removeChild(r_img_old);
 
 	// cache prior and next images
 	//var sel_ind = document.getElementById("suffix").selectedIndex;
