@@ -107,14 +107,29 @@ def get_full_images(start_sol, end_sol, instruments):
 # Makes an index for use by the javascript
 # This ignores the manifests, and only looks at the filesystem.
 def make_index_of_downloaded_photos():
+  inst_for_dir = {INSTRUMENTS[inst]["dir"]:inst for inst in INSTRUMENTS}
   image_index = []
   sol_dirs = os.listdir(IMG_DIR)
   for sol_dir in sol_dirs:
+    sol_num = int(sol_dir[3:])
+    sol = {"sol":sol_num, "images":[]};
     inst_dirs = os.listdir(IMG_DIR + sol_dir)
     for inst_dir in inst_dirs:
-      img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir)
+      images = []
+      inst = inst_for_dir[inst_dir]
       
-  
+      # Lucky for us, the directories are both sorted the same way.
+      # We assume they didn't delete just one.
+      r_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/r')
+      l_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/l')
+      for pair in zip(r_img_filenames, l_img_filenames):
+        image = {
+          "r_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/r/' + pair[0],
+          "l_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/l/' + pair[1]
+        }
+        images.append(image)
+      sol["images"].append({inst:images})
+    image_index.append(sol)
   return image_index
 
 def main():
