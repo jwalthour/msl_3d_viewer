@@ -4,7 +4,7 @@ import os
 import json
 import shutil
 
-DOWNLOAD_BLOCK_SIZE = 4 * 1024 #in bytes
+DOWNLOAD_BLOCK_SIZE = 32 * 1024 #in bytes
 
 JSON_DIR = "manifests/"
 MANIFEST_NAME = "image_manifest.json"
