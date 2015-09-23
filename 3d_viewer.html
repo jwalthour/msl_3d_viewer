@@ -61,7 +61,6 @@ function update()
 }
 
 function initPage() {
-
   // Populate the "instrument" selector
   var inst_names = []
   var inst_dropdown = document.getElementById("instrument");
@@ -72,11 +71,7 @@ function initPage() {
     inst_dropdown.add(option);
   }
 
-  // Set sol to the last one
-  var sol_sel = document.getElementById("sol");
-  var avail_sols = avail[inst_dropdown.value]
-  cur_sol = sol_sel.value = avail_sols[avail_sols.length - 1];
-  cur_img = 0;
+  switchInstrument();
 }
 
 // Navigation functions - all within a particular instrument
@@ -113,6 +108,20 @@ function gotoPrevSol() {
   update();
 }
 
+function switchInstrument() {
+  goToLatestSol();
+  update();
+}
+
+function goToLatestSol() {
+  // Set sol to the last one
+  var sol_sel = document.getElementById("sol");
+  var inst_dropdown = document.getElementById("instrument");
+  var avail_sols = avail[inst_dropdown.value]
+  cur_sol = sol_sel.value = 
+    avail_sols[avail_sols.length - 1];
+  cur_img = 0;
+}
 </script>
 </head>
 <body margin="0" padding="0" onload="initPage();">
@@ -132,12 +141,12 @@ function gotoPrevSol() {
             <td>Sol</td>
 						<td>Instrument</td>
 						<td>Image</td>
-						<td><input type="button" value="update" onclick="update();" /></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td><input type="text" id="sol" value="1100"/></td>
 						<td>
-							<select id="instrument" onchange="">
+							<select id="instrument" onchange="switchInstrument()">
 							</select>
 						</td>
 						<td>
