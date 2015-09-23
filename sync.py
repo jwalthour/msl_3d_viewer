@@ -107,11 +107,11 @@ def get_full_images(start_sol, end_sol, instruments):
 # This ignores the manifests, and only looks at the filesystem.
 def make_index_of_downloaded_photos():
   inst_for_dir = {INSTRUMENTS[inst]["dir"]:inst for inst in INSTRUMENTS}
-  image_index = []
+  image_index = {}
   sol_dirs = os.listdir(IMG_DIR)
   for sol_dir in sol_dirs:
     sol_num = int(sol_dir[3:])
-    sol = {"sol":sol_num, "images":[]};
+    sol = {}
     inst_dirs = os.listdir(IMG_DIR + sol_dir)
     for inst_dir in inst_dirs:
       images = []
@@ -128,8 +128,8 @@ def make_index_of_downloaded_photos():
             "l_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/l/' + pair[1]
           }
           images.append(image)
-        sol["images"].append({inst:images})
-    image_index.append(sol)
+        sol[inst] = images
+    image_index[sol_num] = sol
   return image_index
 
 def main():
