@@ -133,6 +133,7 @@ def make_index_of_downloaded_photos():
           images.append(image)
         sol[inst] = images
     image_index[sol_num] = sol
+    print "Sol " + str(sol_num) + " found to have images for " + ", ".join([inst for inst in sol])
   return image_index
 
 # Returns a dictionary showing which sols are available for a particular instrument
@@ -151,8 +152,8 @@ def main():
   group_range = parser.add_argument_group('Range', 'An inclusive range of sols to download')
   group_range.add_argument("-s", "--start",    metavar="<sol>", dest="start",type=int, help="Start of range")
   group_range.add_argument("-e", "--end",      metavar="<sol>", dest="end",  type=int, help="End of range")
-  
   parser.add_argument("-n", "--latest",   metavar="<N>", dest="latest",  type=int, help="Download images from the latest N sols")
+  parser.add_argument("-j", "--js_only",  action="store_true", dest="js_only", help="Only update javascript output files; do not download anything.")
   args = parser.parse_args()
   if (args.start != None) != (args.end != None): # Need either both or none
     parser.error("Must specify both start and end if you specify one")
@@ -166,8 +167,10 @@ def main():
   if start == None and end == None and latest == None:
     latest = 10
   
+  if args.js_only:
+    print "Will update javascript files based on downloaded images."
   # If they ask for the latest N sols, ignore any specified start and end
-  if latest != None:
+  elif latest != None:
     update_main_manifest()
     manifest = common.load_manifest()
     end = manifest["latest_sol"]
@@ -178,7 +181,8 @@ def main():
   
   if not os.path.isdir(JS_DIR):
     os.makedirs(JS_DIR)
-  get_full_images(start, end, ["navcams", "front_hazcams"])
+  if not args.js_only:
+    get_full_images(start, end, ["navcams", "front_hazcams"])
   image_index = make_index_of_downloaded_photos()
   avail = make_availability_list(image_index)
   index_str = "var image_index=" + json.dumps(image_index)
