@@ -45,11 +45,13 @@ INSTRUMENTS={
     },  
   },
 }
-def update_json(start_sol, end_sol):
+def update_main_manifest():
   if not os.path.isdir(common.JSON_DIR):
     os.makedirs(common.JSON_DIR)
   common.download_file(common.MANIFEST_PATH, "http://mars.jpl.nasa.gov/msl-raw-images/image/image_manifest.json")
-  
+
+def update_json(start_sol, end_sol):
+  update_main_manifest()
   manifest = common.load_manifest()
   for sol in manifest["sols"]:
     if sol["sol"] >= start_sol and sol["sol"] <= end_sol:
@@ -146,14 +148,37 @@ def make_availability_list(image_index):
 
 def main():
   parser = argparse.ArgumentParser(description="Downloads photos from NASA's Mars Science Laboratory public API for use in stereo viewing.")
-  parser.add_argument("-s", "--start",    metavar="sol", dest="start",type=int,  default=1090, help="Download images from sols starting at this one")
-  parser.add_argument("-e", "--end",      metavar="sol", dest="end",  type=int,  default=1100, help="Download images from sols ending at this one")
+  group_range = parser.add_argument_group('Range', 'An inclusive range of sols to download')
+  group_range.add_argument("-s", "--start",    metavar="<sol>", dest="start",type=int, help="Start of range")
+  group_range.add_argument("-e", "--end",      metavar="<sol>", dest="end",  type=int, help="End of range")
+  
+  parser.add_argument("-n", "--latest",   metavar="<N>", dest="latest",  type=int, help="Download images from the latest N sols")
   args = parser.parse_args()
+  if (args.start != None) != (args.end != None): # Need either both or none
+    parser.error("Must specify both start and end if you specify one")
+  elif args.start and args.end and args.end < args.start:
+    parser.error("Must specify an end sol after the start sol")
+  
+  # Set up a reasonable default
+  start = args.start
+  end = args.end
+  latest = args.latest
+  if start == None and end == None and latest == None:
+    latest = 10
+  
+  # If they ask for the latest N sols, ignore any specified start and end
+  if latest != None:
+    update_main_manifest()
+    manifest = common.load_manifest()
+    end = manifest["latest_sol"]
+    start = end - latest
+    print "Will download the latest %d sols, %d-%d."%(latest,start,end)
+  else:
+    print "Will download sols %d-%d."%(start,end)
   
   if not os.path.isdir(JS_DIR):
     os.makedirs(JS_DIR)
-  print "Downloading data from sol %d to sol %d."%(args.start, args.end)
-  get_full_images(args.start, args.end, ["navcams", "front_hazcams"])
+  get_full_images(start, end, ["navcams", "front_hazcams"])
   image_index = make_index_of_downloaded_photos()
   avail = make_availability_list(image_index)
   index_str = "var image_index=" + json.dumps(image_index)
