@@ -46,8 +46,8 @@ function update()
 	document.getElementById("sol_r").innerHTML = cur_sol;
 	document.getElementById("image_num_l").innerHTML = cur_img + 1;
 	document.getElementById("image_num_r").innerHTML = cur_img + 1;
-	var invert = document.getElementById("invert_l").checked;
-  document.getElementById("invert_r").checked = invert;
+	var invert = document.getElementById("invert_l").value == "true";
+  document.getElementById("invert_r").value = document.getElementById("invert_l").value;
 	
   // We assume sol and number have been validated at this point
   
@@ -55,7 +55,7 @@ function update()
   console.log("Updating screen to Sol " + cur_sol + " " + instrument + " image # " + cur_img);
 	var l_url = image_index[cur_sol][instrument][cur_img]["l_file_path"];
 	var r_url = image_index[cur_sol][instrument][cur_img]["r_file_path"];
-	if(invert.checked)
+	if(invert)
 	{
     temp = r_url
     r_url = l_url
@@ -210,7 +210,10 @@ function handleKeyPress(e) {
         </select>
       </td>
       <td class="right_td" style="padding: 0px 20px 0px 0px;">
-        <input type="checkbox" label="invert" id="invert_l" checked="0" onchange="update();">invert</input>
+        <select id="invert_l" onchange="update();">
+          <option value="true">Crosseye</option>
+          <option value="false">Stereoscope</option>
+        </option>
       </td>
 			<!-- Right side -->
       <td class="left_td">
@@ -218,7 +221,10 @@ function handleKeyPress(e) {
         </select>
       </td>
       <td class="right_td" style="padding: 0px 13% 0px 0px;">
-        <input type="checkbox" label="invert" id="invert_r" checked="0" onchange="update();">invert</input>
+        <select id="invert_r" onchange="document.getElementById('invert_l').value = this.value; update();">
+          <option value="true">Crosseye</option>
+          <option value="false">Stereoscope</option>
+        </option>
       </td>
     </tr>
 	</tbody></table>
