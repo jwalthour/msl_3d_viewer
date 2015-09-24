@@ -1,16 +1,19 @@
 <html>
 <head>
 <style>
-.big_legend {
-  color:#555555;
-  font-family: Consolas, Courier New;
+body, select, .big_legend, .big_data {
+  font-family: Calibri, Consolas, Courier New;
+}
+.big_legend, .big_data {
   font-size: 30px;
+}
+.big_legend {
+  color:#888888;
 }
 .big_data {
   color:#000000;
-  font-family: Consolas, Courier New;
-  font-size: 30px;
 }
+
 </style>
 <script src="js/instruments.js"> </script>
 <script src="js/image_index.js"> </script>
@@ -133,8 +136,7 @@ function goToLatestSol() {
   var sol_sel = document.getElementById("sol");
   var inst_dropdown = document.getElementById("instrument");
   var avail_sols = avail[inst_dropdown.value]
-  cur_sol = sol_sel.value = 
-    avail_sols[avail_sols.length - 1];
+  cur_sol = sol_sel.value = avail_sols[avail_sols.length - 1];
   cur_img = 0;
 }
 
@@ -161,32 +163,30 @@ function handleKeyPress(e) {
 <body margin="0" padding="0" onload="initPage();" id="keyhandler">
 	<table width="100%" height="100%" margin="0" padding="0" cellpadding="0"><tbody>
 		<tr height="*">
-			<td width="50%" id="L_td" align="center">
+			<td width="50%" id="L_td" align="center" colspan="2">
 				<img id="L_img" width="1" height="1" src="" />
 			</td>
 			<td width="50%" id="R_td" align="center">
 				<img id="R_img" width="1" height="1" src="" />
 			</td>
 		</tr>
-		<tr height="50">
-			<td colspan="1" align="center">
-				<table>
-					<tr>
-            <td><span class="big_legend">Sol </span><span class="big_data" id="sol">0000</span></td>
-						<td><span class="big_legend">Image </span><span class="big_data" id="image_num">0</span> <span class="big_legend">&nbsp;of </span> <span class="big_legend" id="total_images">1</span></td>
-					</tr>
-					<tr>
-						<td>
-							<select id="instrument" onchange="switchInstrument()">
-							</select>
-						</td>
-						<td>
-							<input type="checkbox" label="invert" id="invert" checked="0" onchange="update();">invert</input>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
+		<tr height="20">
+			<td align="left">
+        <span class="big_legend">Sol </span><span class="big_data" id="sol">0000</span>
+      </td>
+      <td align="right">
+        <span class="big_legend">Image </span><span class="big_data" id="image_num">0</span><span class="big_legend"> of </span><span class="big_legend" id="total_images">1</span>
+      </td>
+    </tr>
+    <tr height="20">
+      <td>
+        <select id="instrument" onchange="switchInstrument()">
+        </select>
+      </td>
+      <td align="right">
+        <input type="checkbox" label="invert" id="invert" checked="0" onchange="update();">invert</input>
+      </td>
+    </tr>
 	</tbody></table>
 </body>
 </html>
