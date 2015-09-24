@@ -13,6 +13,14 @@ body, select, .big_legend, .big_data {
 .big_data {
   color:#000000;
 }
+.left_td {
+  text-align: left;
+  padding: 0px 0px 0px 20px;
+}
+.right_td {
+  text-align: right;
+  padding: 0px 20px 0px 0px;
+}
 
 </style>
 <script src="js/instruments.js"> </script>
@@ -169,7 +177,7 @@ function handleKeyPress(e) {
 </script>
 </head>
 <body margin="0" padding="0" onload="initPage();" id="keyhandler">
-	<table width="100%" height="100%" margin="0" padding="0" cellpadding="0"><tbody>
+	<table width="100%" height="100%" margin="0" padding="0" cellpadding="0" cellspacing="0"><tbody>
 		<tr height="*">
 			<!-- Left side -->
       <td width="50%" id="L_td" align="center" colspan="2">
@@ -182,35 +190,35 @@ function handleKeyPress(e) {
 		</tr>
 		<tr height="20">
 			<!-- Left side -->
-			<td align="left">
+			<td class="left_td">
         <span class="big_legend">Sol </span><span class="big_data" id="sol_l">0000</span>
       </td>
-      <td align="right">
+      <td class="right_td">
         <span class="big_legend">Image </span><span class="big_data" id="image_num_l">0</span><span class="big_legend"> of </span><span class="big_legend" id="total_images_l">1</span>
       </td>
 			<!-- Right side -->
-			<td align="left">
+			<td class="left_td">
         <span class="big_legend">Sol </span><span class="big_data" id="sol_r">0000</span>
       </td>
-      <td align="right">
+      <td class="right_td">
         <span class="big_legend">Image </span><span class="big_data" id="image_num_r">0</span><span class="big_legend"> of </span><span class="big_legend" id="total_images_r">1</span>
       </td>
     </tr>
     <tr height="20">
 			<!-- Left side -->
-      <td>
+      <td class="left_td">
         <select id="instrument_l" onchange="switchInstrument()">
         </select>
       </td>
-      <td align="right">
+      <td class="right_td">
         <input type="checkbox" label="invert" id="invert_l" checked="0" onchange="update();">invert</input>
       </td>
 			<!-- Right side -->
-      <td>
+      <td class="left_td">
         <select id="instrument_r" onchange="document.getElementById('instrument_l').value = this.value; switchInstrument();">
         </select>
       </td>
-      <td align="right">
+      <td class="right_td">
         <input type="checkbox" label="invert" id="invert_r" checked="0" onchange="update();">invert</input>
       </td>
     </tr>

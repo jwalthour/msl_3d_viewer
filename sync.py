@@ -29,7 +29,7 @@ INSTRUMENTS={
     },  
   },
   "rear_hazcams": {
-    "human_readable":"Front Hazard Avoidance Cameras",
+    "human_readable":"Rear Hazard Avoidance Cameras",
     "dir":"r_hazcam",
     "inst_prefix":{
       "r":"FHAZ_RIGHT_",
