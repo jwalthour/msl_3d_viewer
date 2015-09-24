@@ -133,7 +133,7 @@ def make_index_of_downloaded_photos():
           images.append(image)
         sol[inst] = images
     image_index[sol_num] = sol
-    print "Sol " + str(sol_num) + " found to have images for " + ", ".join([inst for inst in sol])
+    #print "Sol " + str(sol_num) + " found to have images for " + ", ".join([inst for inst in sol])
   return image_index
 
 # Returns a dictionary showing which sols are available for a particular instrument
@@ -145,6 +145,8 @@ def make_availability_list(image_index):
         if not inst in avail:
           avail[inst] = []
         avail[inst].append(sol)
+  for inst in avail:
+    avail[inst].sort()
   return avail
 
 def main():
@@ -183,7 +185,9 @@ def main():
     os.makedirs(JS_DIR)
   if not args.js_only:
     get_full_images(start, end, ["navcams", "front_hazcams"])
+  print "Creating image index."
   image_index = make_index_of_downloaded_photos()
+  print "Creating availability list."
   avail = make_availability_list(image_index)
   index_str = "var image_index=" + json.dumps(image_index)
   instrument_str = "var instruments=" + json.dumps(INSTRUMENTS)
@@ -194,6 +198,7 @@ def main():
     outfile.write(instrument_str)
   with open(AVAIL_PATH, 'w') as outfile:
     outfile.write(avail_str)
+  print "Done."
 
 if __name__ == "__main__":
     main()
