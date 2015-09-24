@@ -15,11 +15,10 @@ body, select, .big_legend, .big_data {
 }
 .left_td {
   text-align: left;
-  padding: 0px 0px 0px 20px;
+  
 }
 .right_td {
   text-align: right;
-  padding: 0px 20px 0px 0px;
 }
 
 </style>
@@ -45,8 +44,8 @@ function update()
   document.getElementById("instrument_r").value = instrument
 	document.getElementById("sol_l").innerHTML = cur_sol;
 	document.getElementById("sol_r").innerHTML = cur_sol;
-	document.getElementById("image_num_l").innerHTML = cur_img;
-	document.getElementById("image_num_r").innerHTML = cur_img;
+	document.getElementById("image_num_l").innerHTML = cur_img + 1;
+	document.getElementById("image_num_r").innerHTML = cur_img + 1;
 	var invert = document.getElementById("invert_l").checked;
   document.getElementById("invert_r").checked = invert;
 	
@@ -190,27 +189,27 @@ function handleKeyPress(e) {
 		</tr>
 		<tr height="20">
 			<!-- Left side -->
-			<td class="left_td">
+			<td class="left_td" style="padding: 0px 0px 0px 10%;">
         <span class="big_legend">Sol </span><span class="big_data" id="sol_l">0000</span>
       </td>
-      <td class="right_td">
+      <td class="right_td" style="padding: 0px 20px 0px 0px;">
         <span class="big_legend">Image </span><span class="big_data" id="image_num_l">0</span><span class="big_legend"> of </span><span class="big_legend" id="total_images_l">1</span>
       </td>
 			<!-- Right side -->
-			<td class="left_td">
+			<td class="left_td" width="5">
         <span class="big_legend">Sol </span><span class="big_data" id="sol_r">0000</span>
       </td>
-      <td class="right_td">
+      <td width="*" class="right_td" style="padding: 0px 13% 0px 0px;">
         <span class="big_legend">Image </span><span class="big_data" id="image_num_r">0</span><span class="big_legend"> of </span><span class="big_legend" id="total_images_r">1</span>
       </td>
     </tr>
     <tr height="20">
 			<!-- Left side -->
-      <td class="left_td">
+      <td class="left_td" style="padding: 0px 0px 0px 10%;">
         <select id="instrument_l" onchange="switchInstrument()">
         </select>
       </td>
-      <td class="right_td">
+      <td class="right_td" style="padding: 0px 20px 0px 0px;">
         <input type="checkbox" label="invert" id="invert_l" checked="0" onchange="update();">invert</input>
       </td>
 			<!-- Right side -->
@@ -218,7 +217,7 @@ function handleKeyPress(e) {
         <select id="instrument_r" onchange="document.getElementById('instrument_l').value = this.value; switchInstrument();">
         </select>
       </td>
-      <td class="right_td">
+      <td class="right_td" style="padding: 0px 13% 0px 0px;">
         <input type="checkbox" label="invert" id="invert_r" checked="0" onchange="update();">invert</input>
       </td>
     </tr>
