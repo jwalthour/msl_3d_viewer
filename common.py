@@ -12,7 +12,7 @@ MANIFEST_PATH = JSON_DIR + MANIFEST_NAME
 
 def download_file(local_path, url):
   # Method credit http://stackoverflow.com/questions/1517616/
-  print "Downloading: " + local_path
+  #print "Downloading: " + local_path
   resp = urllib2.urlopen(url)
   with open(local_path, 'wb') as f:
     while True:

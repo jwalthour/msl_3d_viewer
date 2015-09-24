@@ -48,15 +48,17 @@ INSTRUMENTS={
 def update_main_manifest():
   if not os.path.isdir(common.JSON_DIR):
     os.makedirs(common.JSON_DIR)
+  print "Downloading main image manifest."
   common.download_file(common.MANIFEST_PATH, "http://mars.jpl.nasa.gov/msl-raw-images/image/image_manifest.json")
 
-def update_json(start_sol, end_sol):
-  update_main_manifest()
+def update_image_manifests(start_sol, end_sol):
   manifest = common.load_manifest()
+  print "Downloading image manifests for sols %d-%d."%(start_sol, end_sol)
   for sol in manifest["sols"]:
     if sol["sol"] >= start_sol and sol["sol"] <= end_sol:
       url = sol["catalog_url"]
       outfile = common.JSON_DIR + url.split("/")[-1]
+      # print "Downloading image manifest for sol %d."%sol["sol"]
       common.download_file(outfile, url)
 
 def clear_downloaded_manifests():
@@ -68,8 +70,7 @@ def clear_downloaded_manifests():
 #end_sol: an integer
 #instruments: a list of strings, which must be keys of INSTRUMENTS structure
 def get_full_images(start_sol, end_sol, instruments):
-  clear_downloaded_manifests()
-  update_json(start_sol, end_sol)
+  update_image_manifests(start_sol, end_sol)
   if not os.path.isdir(IMG_DIR):
     os.makedirs(IMG_DIR)
   sol_dirs = os.listdir(IMG_DIR)
@@ -78,6 +79,8 @@ def get_full_images(start_sol, end_sol, instruments):
   for image_list in common.load_image_lists():
     sol = image_list["sol"]
     sol_dir = "sol%d"%sol
+    count_downloaded = 0
+    count_skipped = 0
     if not sol_dir in sol_dirs:
       os.makedirs(IMG_DIR + sol_dir)
     instrument_dirs = os.listdir(IMG_DIR + sol_dir)
@@ -102,9 +105,12 @@ def get_full_images(start_sol, end_sol, instruments):
         url = image["urlList"]
         local_path = IMG_DIR + sol_dir + "/" + instrument_dir + "/" + url.split("/")[-1]
         if os.path.isfile(local_path):
-          print "Present; won't download: " + local_path
+          count_skipped += 1
+          #print "Present; won't download: " + local_path
         else:
           common.download_file(local_path, url)
+          count_downloaded += 1
+    print "Sol %d: downloaded %d images and skipped %d images."%(int(sol), count_downloaded, count_skipped)
 
 # Makes an index for use by the javascript
 # This ignores the manifests, and only looks at the filesystem.
@@ -169,18 +175,24 @@ def main():
   if start == None and end == None and latest == None:
     latest = 10
   
+  # Some of the options need to be checked against the manifest
+  if not args.js_only:
+    #clear_downloaded_manifests() # force a redownload
+    update_main_manifest()
+    manifest = common.load_manifest()
+
   if args.js_only:
     print "Will update javascript files based on downloaded images."
   # If they ask for the latest N sols, ignore any specified start and end
   elif latest != None:
-    update_main_manifest()
-    manifest = common.load_manifest()
     end = manifest["latest_sol"]
     start = end - latest
     print "Will download the latest %d sols, %d-%d."%(latest,start,end)
   else:
+    if start < 0: start = 0
+    if end > manifest["latest_sol"]: end = manifest["latest_sol"]
     print "Will download sols %d-%d."%(start,end)
-  
+
   if not os.path.isdir(JS_DIR):
     os.makedirs(JS_DIR)
   if not args.js_only:
