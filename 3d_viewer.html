@@ -48,6 +48,9 @@ function update()
 	document.getElementById("image_num_r").innerHTML = cur_img + 1;
 	var invert = document.getElementById("invert_l").value == "true";
   document.getElementById("invert_r").value = document.getElementById("invert_l").value;
+  var avail_imgs = image_index[cur_sol][instrument];
+  document.getElementById("total_images_l").innerHTML = avail_imgs.length;
+  document.getElementById("total_images_r").innerHTML = avail_imgs.length;
 	
   // We assume sol and number have been validated at this point
   
@@ -139,10 +142,6 @@ function gotoPrevSol() {
 
 function switchInstrument() {
   goToLatestSol();
-  var inst_dropdown = document.getElementById("instrument_l");
-  var avail_imgs = image_index[cur_sol][inst_dropdown.value];
-  document.getElementById("total_images_l").innerHTML = avail_imgs.length;
-  document.getElementById("total_images_r").innerHTML = avail_imgs.length;
   update();
 }
 
@@ -160,13 +159,13 @@ function handleKeyPress(e) {
   
   switch(e.keyCode) {
     case 38: // up
-      gotoPrevSol();
+      gotoNextSol();
       break;
     case 37: // left
       gotoPrevImage();
       break;
     case 40: // down
-      gotoNextSol();
+      gotoPrevSol();
       break;
     case 39: // right
       gotoNextImage();
