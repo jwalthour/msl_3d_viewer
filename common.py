@@ -34,4 +34,14 @@ def load_image_lists():
     with open(JSON_DIR + filename) as images_file:
       lists.append(json.load(images_file))
   return lists
-    
+
+# Returns true if the two strings match,
+# disregarding the character at idx
+def strings_match_ignoring_char(string0, string1, idx):
+  if len(string0) != len(string1): return False
+  else:
+    if idx > len(string0) - 1 or idx < 0:
+      return string0 == string1
+    else:
+      return string0[0:idx] == string1[0:idx] and string0[idx + 1:] == string1[idx + 1:]
+      

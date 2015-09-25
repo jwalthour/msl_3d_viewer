@@ -19,6 +19,7 @@ INSTRUMENTS={
       "r":"NAV_RIGHT_",
       "l":"NAV_LEFT_",
     },
+    "img_name_lr_char_idx":1, # Filenames like NLB_4832...
   },
   "front_hazcams": {
     "human_readable":"Front Hazard Avoidance Cameras",
@@ -26,7 +27,8 @@ INSTRUMENTS={
     "inst_prefix":{
       "r":"FHAZ_RIGHT_",
       "l":"FHAZ_LEFT_",
-    },  
+    },
+    "img_name_lr_char_idx":1, # Filenames like FRB_4832...
   },
   "rear_hazcams": {
     "human_readable":"Rear Hazard Avoidance Cameras",
@@ -34,7 +36,8 @@ INSTRUMENTS={
     "inst_prefix":{
       "r":"FHAZ_RIGHT_",
       "l":"FHAZ_LEFT_",
-    },  
+    },
+    "img_name_lr_char_idx":1, # Filenames like RLB_4832...
   },
   "mastcams":{
     "human_readable":"Mast Cameras",
@@ -42,7 +45,8 @@ INSTRUMENTS={
     "inst_prefix":{
       "r":"MAST_RIGHT", # No A and B sides for this one
       "l":"MAST_LEFT",
-    },  
+    },
+    "img_name_lr_char_idx":5, # Filenames like 0956ML004..
   },
 }
 def update_main_manifest():
@@ -100,7 +104,7 @@ def get_full_images(start_sol, end_sol, instruments):
       if not inst["dir"] in instrument_dirs:
         os.makedirs(IMG_DIR + sol_dir + "/" + inst["dir"] + "/r")
         os.makedirs(IMG_DIR + sol_dir + "/" + inst["dir"] + "/l")
-        instrument_dirs.append(inst["dir"])  
+        instrument_dirs.append(inst["dir"])
       if correct_instrument != None and image["sampleType"] == "full":
         url = image["urlList"]
         local_path = IMG_DIR + sol_dir + "/" + instrument_dir + "/" + url.split("/")[-1]
@@ -126,17 +130,22 @@ def make_index_of_downloaded_photos():
       images = []
       if inst_dir in inst_for_dir:
         inst = inst_for_dir[inst_dir]
-        
-        # Lucky for us, the directories are both sorted the same way.
-        # We assume they didn't delete just one.
+        ignore_char_idx = INSTRUMENTS[inst]["img_name_lr_char_idx"]
+
+        # Get lists of names to be paired
         r_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/r')
         l_img_filenames = os.listdir(IMG_DIR + sol_dir + '/' + inst_dir + '/l')
-        for pair in zip(r_img_filenames, l_img_filenames):
-          image = {
-            "r_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/r/' + pair[0],
-            "l_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/l/' + pair[1]
-          }
-          images.append(image)
+        
+        # Since we seek the intersection of matching filenames, we can start from either side.
+        # Also there has got to be a more efficient and pythonic way to do this.
+        for r_image_filename in r_img_filenames:
+          for l_image_filename in l_img_filenames:
+            if common.strings_match_ignoring_char(r_image_filename, l_image_filename, ignore_char_idx):
+              image = {
+                "r_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/r/' + r_image_filename,
+                "l_file_path": IMG_DIR + sol_dir + '/' + inst_dir + '/l/' + l_image_filename
+              }
+              images.append(image)
         sol[inst] = images
     image_index[sol_num] = sol
     #print "Sol " + str(sol_num) + " found to have images for " + ", ".join([inst for inst in sol])
@@ -167,14 +176,14 @@ def main():
     parser.error("Must specify both start and end if you specify one")
   elif args.start and args.end and args.end < args.start:
     parser.error("Must specify an end sol after the start sol")
-  
+
   # Set up a reasonable default
   start = args.start
   end = args.end
   latest = args.latest
   if start == None and end == None and latest == None:
     latest = 10
-  
+
   # Some of the options need to be checked against the manifest
   if not args.js_only:
     #clear_downloaded_manifests() # force a redownload
