@@ -30,6 +30,8 @@ def load_image_lists():
   lists = []
   filenames = os.listdir(JSON_DIR)
   filenames.remove(MANIFEST_NAME)
+  # Sort numerically.  Assumes filenames are all of the form 'images_solXXX.json'.
+  filenames.sort(key=lambda fn: int(fn.split('sol')[1].split('.')[0]))
   for filename in filenames:
     with open(JSON_DIR + filename) as images_file:
       lists.append(json.load(images_file))

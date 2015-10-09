@@ -61,7 +61,7 @@ def update_image_manifests(start_sol, end_sol):
   for sol in manifest["sols"]:
     if sol["sol"] >= start_sol and sol["sol"] <= end_sol:
       url = sol["catalog_url"]
-      outfile = common.JSON_DIR + url.split("/")[-1]
+      outfile = common.JSON_DIR + "images_sol%d.json"%sol['sol']
       # print "Downloading image manifest for sol %d."%sol["sol"]
       common.download_file(outfile, url)
 
