@@ -13,12 +13,15 @@ MANIFEST_PATH = JSON_DIR + MANIFEST_NAME
 def download_file(local_path, url):
   # Method credit http://stackoverflow.com/questions/1517616/
   #print "Downloading: " + local_path
-  resp = urllib2.urlopen(url)
-  with open(local_path, 'wb') as f:
-    while True:
-      block = resp.read(DOWNLOAD_BLOCK_SIZE)
-      if not block: break
-      f.write(block)
+  try:
+    resp = urllib2.urlopen(url)
+    with open(local_path, 'wb') as f:
+      while True:
+        block = resp.read(DOWNLOAD_BLOCK_SIZE)
+        if not block: break
+        f.write(block)
+  except:
+    print "Failed to download %s."%url
 
 # Loads the master manifest of sols
 def load_manifest():
